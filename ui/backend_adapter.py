@@ -1,12 +1,13 @@
 import torch
 import numpy as np
-
 from config import SEQ_LENGTH
 from utils.data_loader import load_data, create_sequences
 from models.model import NeuroTwinLatent
 from inference.predict import evaluate
 from inference.what_if import predict_future, what_if_simulation
 from utils.anomaly import detect_anomalies
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 
 MODEL_PATH = "models/neurotwin.pth"
@@ -15,7 +16,7 @@ MODEL_PATH = "models/neurotwin.pth"
 class NeuroTwinBackend:
     def __init__(self):
         self.model = NeuroTwinLatent()
-        self.model.load_state_dict(torch.load(MODEL_PATH))
+        self.model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu"))
         self.model.eval()
 
         self.data_scaled, self.scaler = load_data()
@@ -49,5 +50,5 @@ class NeuroTwinBackend:
     # 🔥 What-if
     def run_whatif(self):
         sample_seq = self.X_test[0]
-        orig, mod = what_if_simulation(self.model, sample_seq)
+        orig, mod, _ = what_if_simulation(self.model, sample_seq)
         return orig, mod
