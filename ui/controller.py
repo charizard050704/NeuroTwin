@@ -1,12 +1,10 @@
 import torch
-
 from utils.data_loader import load_data, create_sequences
 from config import SEQ_LENGTH
 from models.model import NeuroTwinLatent
 from inference.predict import evaluate
 from inference.what_if import predict_future, what_if_simulation
 from utils.anomaly import detect_anomalies
-
 
 class Controller:
     def __init__(self):
